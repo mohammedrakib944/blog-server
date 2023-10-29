@@ -42,14 +42,13 @@ class UserServices {
   }
 
   // update user
-  async updateUser({ user_id, name, is_banned, role }) {
+  async updateUser({ name, is_banned, occupation, role = "user" }, user_id) {
     if (!user_type.includes(role)) {
       throw createError.BadRequest("role must be user or admin");
     }
-
     const result = await pool.query(
-      `UPDATE users SET name=?, is_banned=?, role=? WHERE user_id=?`,
-      [name, is_banned, role, user_id]
+      `UPDATE users SET name=?,occupation=?, is_banned=?, role=? WHERE user_id=?`,
+      [name, occupation, is_banned, role, user_id]
     );
     return result[0];
   }
@@ -67,4 +66,4 @@ class UserServices {
   }
 }
 
-export default UserServices;
+export default new UserServices();

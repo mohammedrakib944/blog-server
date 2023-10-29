@@ -1,8 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import UserServices from "./user.services.js";
+import userService from "./user.services.js";
 import success from "../../helpers/success.js";
-
-const userService = new UserServices();
 
 class UserController {
   // get all users
@@ -30,8 +28,7 @@ class UserController {
   updateUser = async (req, res, next) => {
     try {
       const { user_id } = req.params;
-      const { name, is_banned, role = "user" } = req.body;
-      await userService.updateUser({ user_id, name, is_banned, role });
+      await userService.updateUser(req.body, user_id);
       success(res, StatusCodes.OK, "User updated successfully");
     } catch (error) {
       next(error);
@@ -50,4 +47,4 @@ class UserController {
   };
 }
 
-export default UserController;
+export default new UserController();

@@ -1,19 +1,9 @@
 import express from "express";
-import UserController from "./user.controller.js";
-import userValidator from "./user.validator.js";
 import validationOutput from "../../middlewares/validation.output.js";
+import userController from "./user.controller.js";
+import userValidator from "./user.validator.js";
 
 const router = express.Router();
-const userController = new UserController();
-
-router
-  .route("/")
-  .post(
-    userValidator.userLoginValidator,
-    validationOutput,
-    userController.loginUser
-  )
-  .get(userController.getAllUsers);
 
 router
   .route("/:user_id")
@@ -23,5 +13,14 @@ router
     userController.updateUser
   )
   .delete(userController.deleteUser);
+
+router
+  .route("/")
+  .post(
+    userValidator.userLoginValidator,
+    validationOutput,
+    userController.loginUser
+  )
+  .get(userController.getAllUsers);
 
 export default router;
