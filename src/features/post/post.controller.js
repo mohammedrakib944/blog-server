@@ -28,6 +28,18 @@ class PostController {
     res.status(StatusCodes.OK).json(post);
   });
 
+  // get featured posts
+  getFeaturedPosts = catchAsync(async (req, res, next) => {
+    const posts = await postServices.getFeaturedPosts();
+    res.status(StatusCodes.OK).json(posts);
+  });
+
+  // get posts views by user id
+  getPostsViewsByUserId = catchAsync(async (req, res, next) => {
+    const views = await postServices.getPostsViewsByUserId(req.params.user_id);
+    res.status(StatusCodes.OK).json(views);
+  });
+
   // update post by id
   updatePostById = catchAsync(async (req, res, next) => {
     await postServices.updatePostById(req.body, req.params.slug);

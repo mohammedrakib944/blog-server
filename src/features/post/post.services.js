@@ -39,6 +39,23 @@ class PostServices {
     return result[0];
   }
 
+  // All posts view of a user
+  async getPostsViewsByUserId(user_id) {
+    const result = await pool.query(
+      `SELECT sum(views) as total_view FROM posts WHERE u_id = ?`,
+      [user_id]
+    );
+    return result[0];
+  }
+
+  // get featured posts
+  async getFeaturedPosts() {
+    const result = await pool.query(
+      `SELECT * FROM posts ORDER BY date DESC LIMIT 4`
+    );
+    return result[0];
+  }
+
   // update post by id
   async updatePostById({ cover_image, title, content, category }, post_id) {
     const slug = slugify(title, { lower: true });
