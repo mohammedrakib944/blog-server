@@ -66,6 +66,22 @@ class PostServices {
     return result[0];
   }
 
+  // top 5 author by views
+  async getTopAuthors() {
+    const result = await pool.query(
+      `SELECT u_id, SUM(views) AS total_views FROM posts GROUP BY u_id ORDER BY total_views DESC LIMIT 5`
+    );
+    return result[0];
+  }
+
+  // top 10 posts by views
+  async getTopTenPosts() {
+    const result = await pool.query(
+      `SELECT * FROM posts ORDER BY views DESC LIMIT 10`
+    );
+    return result[0];
+  }
+
   // increment view count of a post
   async incrementView(post_id) {
     const result = await pool.query(

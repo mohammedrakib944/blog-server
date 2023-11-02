@@ -41,6 +41,14 @@ class UserServices {
     return result[0];
   }
 
+  // get user by id
+  async getUserById(user_id) {
+    const result = await pool.query(`SELECT * FROM users WHERE user_id = ?`, [
+      user_id,
+    ]);
+    return result[0];
+  }
+
   // update user
   async updateUser({ name, is_banned, occupation, role = "user" }, user_id) {
     if (!user_type.includes(role)) {

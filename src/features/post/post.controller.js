@@ -46,6 +46,18 @@ class PostController {
     success(res, StatusCodes.OK, "Post updated success!");
   });
 
+  // top 5 authors by views
+  getTopAuthorsByViews = catchAsync(async (req, res, next) => {
+    const authors = await postServices.getTopAuthors();
+    res.status(StatusCodes.OK).json(authors);
+  });
+
+  // top 10 posts by views
+  getTopTenPostsByViews = catchAsync(async (req, res, next) => {
+    const posts = await postServices.getTopTenPosts();
+    res.status(StatusCodes.OK).json(posts);
+  });
+
   // increment view count
   incrementView = catchAsync(async (req, res, next) => {
     await postServices.incrementView(req.params.post_id);

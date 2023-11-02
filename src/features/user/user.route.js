@@ -7,6 +7,7 @@ const router = express.Router();
 
 router
   .route("/:user_id")
+  .get(userController.getUserById)
   .patch(
     userValidator.userUpdateValidator,
     validationOutput,
