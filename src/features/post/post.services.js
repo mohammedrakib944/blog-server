@@ -69,8 +69,14 @@ class PostServices {
   // top 5 author by views
   async getTopAuthors() {
     const result = await pool.query(
-      `SELECT u_id, SUM(views) AS total_views FROM posts GROUP BY u_id ORDER BY total_views DESC LIMIT 5`
+      ` SELECT users.*, SUM(posts.views) AS total_view_count
+        FROM users
+        JOIN posts ON users.user_id = posts.u_id
+        GROUP BY users.user_id
+        ORDER BY total_view_count DESC
+        LIMIT 10;`
     );
+
     return result[0];
   }
 

@@ -6,7 +6,7 @@ const user_type = ["user", "admin"];
 
 class UserServices {
   // create/login user
-  async loginHandler({ name, email }) {
+  async loginHandler({ name, email, photo = "" }) {
     const User = await pool.query(`SELECT * FROM users WHERE email = ?`, [
       email,
     ]);
@@ -17,18 +17,24 @@ class UserServices {
     if (User[0].length > 0) {
       // If user already exist
       const result = {
-        ...User[0][0],
+        user: User[0][0],
         token,
       };
       return result;
     } else {
       // If no user found create one
       let result = await pool.query(
-        `INSERT INTO users (name, email, role) VALUES (?, ?, ?)`,
-        [name, email, "user"]
+        `INSERT INTO users (name, email, photo, role) VALUES (?, ?, ?, ?)`,
+        [name, email, photo, "user"]
       );
+
+      let [user] = await pool.query(
+        `SELECT * FROM users WHERE user_id = ?`,
+        result[0].insertId
+      );
+
       result = {
-        user_id: result[0].insertId,
+        user: user[0],
         token,
       };
       return result;
@@ -46,11 +52,14 @@ class UserServices {
     const result = await pool.query(`SELECT * FROM users WHERE user_id = ?`, [
       user_id,
     ]);
-    return result[0];
+    return result[0][0];
   }
 
   // update user
-  async updateUser({ name, is_banned, occupation, role = "user" }, user_id) {
+  async updateUser(
+    { name, is_banned = false, occupation = "", role = "user" },
+    user_id
+  ) {
     if (!user_type.includes(role)) {
       throw createError.BadRequest("role must be user or admin");
     }

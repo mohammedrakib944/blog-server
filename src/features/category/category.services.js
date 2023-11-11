@@ -56,7 +56,6 @@ class CategoryServices {
    * @returns
    */
   async updateStatus({ id, hide }) {
-    console.log(id, hide);
     if (!id) throw createError.BadRequest("id and hide=true/false required!");
     const [result] = await pool.query(
       `UPDATE category SET is_hide=? WHERE category_id = ?`,

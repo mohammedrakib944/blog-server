@@ -16,10 +16,9 @@ class UserController {
     res.status(StatusCodes.OK).json(user);
   });
 
-  // create user
+  // create user / login user
   loginUser = catchAsync(async (req, res, next) => {
-    const { name, email } = req.body;
-    const UserInfo = await userService.loginHandler({ name, email });
+    const UserInfo = await userService.loginHandler(req.body);
     res.status(StatusCodes.OK).json(UserInfo);
   });
 
