@@ -57,16 +57,26 @@ class PostServices {
   }
 
   // update post by id
-  async updatePostById({ cover_image, title, content, category }, post_id) {
+  async updatePostById({ title, ...rest }, post_id) {
+    if (!title) throw createError.BadRequest("title is required!");
+
     const slug = slugify(title, { lower: true });
-    const result = await pool.query(
-      `UPDATE posts SET cover_image=?, title=?, content=?, category=?, slug=? WHERE post_id=?`,
-      [cover_image, title, content, category, slug, post_id]
-    );
+
+    const updateFields = Object.keys(rest)
+      .map((key) => `${key}=?`)
+      .join(", ");
+
+    const sqlQuery = `UPDATE posts SET ${updateFields}, slug=? WHERE post_id = ?`;
+
+    const result = await pool.query(sqlQuery, [
+      ...Object.values(rest),
+      slug,
+      post_id,
+    ]);
     return result[0];
   }
 
-  // top 5 author by views
+  // top 10 author by views
   async getTopAuthors() {
     const result = await pool.query(
       ` SELECT users.*, SUM(posts.views) AS total_view_count

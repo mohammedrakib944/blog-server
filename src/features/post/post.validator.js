@@ -8,14 +8,6 @@ const createPostValidator = [
   check("category").notEmpty().withMessage("category"),
 ];
 
-const updatePostValidator = [
-  check("cover_image").notEmpty().withMessage("cover_image"),
-  check("title").notEmpty().withMessage("title"),
-  check("content").notEmpty().withMessage("content"),
-  check("category").notEmpty().withMessage("category"),
-];
-
 export default {
   createPostValidator,
-  updatePostValidator,
 };

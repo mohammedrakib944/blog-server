@@ -15,11 +15,7 @@ router.get("/top_ten", postController.getTopTenPostsByViews);
 router
   .route("/:slug")
   .get(postController.getPostBySlug)
-  .patch(
-    postValidator.updatePostValidator,
-    validationOutput,
-    postController.updatePostById
-  )
+  .patch(postController.updatePostById)
   .delete(postController.deletePostById);
 
 router

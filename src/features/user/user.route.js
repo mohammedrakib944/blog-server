@@ -8,11 +8,7 @@ const router = express.Router();
 router
   .route("/:user_id")
   .get(userController.getUserById)
-  .patch(
-    userValidator.userUpdateValidator,
-    validationOutput,
-    userController.updateUser
-  )
+  .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
 router

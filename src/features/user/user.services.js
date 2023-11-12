@@ -56,17 +56,22 @@ class UserServices {
   }
 
   // update user
-  async updateUser(
-    { name, is_banned = false, occupation = "", role = "user" },
-    user_id
-  ) {
+  async updateUser({ role = "user", ...rest }, user_id) {
     if (!user_type.includes(role)) {
       throw createError.BadRequest("role must be user or admin");
     }
-    const result = await pool.query(
-      `UPDATE users SET name=?,occupation=?, is_banned=?, role=? WHERE user_id=?`,
-      [name, occupation, is_banned, role, user_id]
-    );
+    // name=?, email=?, photo=?,
+    const updateFields = Object.keys(rest)
+      .map((key) => `${key}=?`)
+      .join(", ");
+
+    const sqlQuery = `UPDATE users SET ${updateFields}, role=? WHERE user_id = ?`;
+
+    const result = await pool.query(sqlQuery, [
+      ...Object.values(rest),
+      role,
+      user_id,
+    ]);
     return result[0];
   }
 
