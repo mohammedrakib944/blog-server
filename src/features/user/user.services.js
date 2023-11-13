@@ -6,7 +6,7 @@ const user_type = ["user", "admin"];
 
 class UserServices {
   // create/login user
-  async loginHandler({ name, email, photo = "" }) {
+  async loginHandler({ name, email }) {
     const User = await pool.query(`SELECT * FROM users WHERE email = ?`, [
       email,
     ]);
@@ -24,8 +24,8 @@ class UserServices {
     } else {
       // If no user found create one
       let result = await pool.query(
-        `INSERT INTO users (name, email, photo, role) VALUES (?, ?, ?, ?)`,
-        [name, email, photo, "user"]
+        `INSERT INTO users (name, email, role) VALUES (?, ?, ?)`,
+        [name, email, "user"]
       );
 
       let [user] = await pool.query(

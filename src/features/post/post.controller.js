@@ -16,6 +16,12 @@ class PostController {
     res.status(StatusCodes.OK).json(posts);
   });
 
+  // get posts by user id
+  getPostsByUserId = catchAsync(async (req, res, next) => {
+    const posts = await postServices.getPostsByUserId(req.params.user_id);
+    res.status(StatusCodes.OK).json(posts);
+  });
+
   // search posts
   searchPosts = catchAsync(async (req, res, next) => {
     const posts = await postServices.searchPosts(req.body.search_text);

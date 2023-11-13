@@ -16,8 +16,22 @@ class PostServices {
   // get all posts by page number
   async getAllPosts(page_number = 0) {
     const result = await pool.query(
-      `SELECT * FROM posts ORDER BY date DESC LIMIT 20 OFFSET ?`,
+      `SELECT posts.*, users.user_id, users.name, users.photo
+      FROM posts INNER JOIN users
+      ON posts.u_id = users.user_id ORDER BY date DESC LIMIT 20 OFFSET ?`,
       [page_number * 20]
+    );
+    return result[0];
+  }
+
+  // get posts by user id
+  async getPostsByUserId(user_id) {
+    const result = await pool.query(
+      `SELECT posts.*, users.user_id, users.name, users.photo
+       FROM posts INNER JOIN users
+       ON posts.u_id = users.user_id
+       WHERE u_id = ? ORDER BY date DESC`,
+      [user_id]
     );
     return result[0];
   }
@@ -51,7 +65,9 @@ class PostServices {
   // get featured posts
   async getFeaturedPosts() {
     const result = await pool.query(
-      `SELECT * FROM posts ORDER BY date DESC LIMIT 4`
+      `SELECT posts.*, users.user_id, users.name, users.photo
+      FROM posts INNER JOIN users
+      ON posts.u_id = users.user_id ORDER BY posts.views DESC LIMIT 3`
     );
     return result[0];
   }
@@ -93,7 +109,9 @@ class PostServices {
   // top 10 posts by views
   async getTopTenPosts() {
     const result = await pool.query(
-      `SELECT * FROM posts ORDER BY views DESC LIMIT 10`
+      `SELECT posts.*, users.user_id, users.name, users.photo
+      FROM posts INNER JOIN users
+      ON posts.u_id = users.user_id ORDER BY posts.views DESC LIMIT 3`
     );
     return result[0];
   }
