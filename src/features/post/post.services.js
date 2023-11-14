@@ -47,10 +47,18 @@ class PostServices {
 
   // get post by slug
   async getPostBySlug(slug) {
-    const result = await pool.query(`SELECT * FROM posts WHERE slug = ?`, [
+    const [article] = await pool.query(`SELECT * FROM posts WHERE slug = ?`, [
       slug,
     ]);
-    return result[0];
+
+    const [result] = await pool.query(
+      `SELECT 
+    user_id, name, photo, occupation
+    FROM users WHERE user_id = ?`,
+      [article[0].u_id]
+    );
+
+    return { ...article[0], author: result[0] };
   }
 
   // All posts view of a user
