@@ -4,11 +4,11 @@ import slugify from "slugify";
 
 class PostServices {
   // create post
-  async createPost({ user_id, cover_image, title, content, category }) {
+  async createPost({ user_id, cover_image, title, content, category, tags }) {
     const slug = slugify(title, { lower: true });
     const result = await pool.query(
-      `INSERT INTO posts (u_id,cover_image, title, slug, content, category) VALUES (?,?, ?, ?, ?, ?)`,
-      [user_id, cover_image, title, slug, content, category]
+      `INSERT INTO posts (u_id,cover_image, title, slug, content, category, tags) VALUES (?,?, ?, ?, ?, ?,?)`,
+      [user_id, cover_image, title, slug, content, category, tags]
     );
     return result[0];
   }
@@ -90,9 +90,10 @@ class PostServices {
       .map((key) => `${key}=?`)
       .join(", ");
 
-    const sqlQuery = `UPDATE posts SET ${updateFields}, slug=? WHERE post_id = ?`;
+    const sqlQuery = `UPDATE posts SET title=?, ${updateFields}, slug=? WHERE post_id = ?`;
 
     const result = await pool.query(sqlQuery, [
+      title,
       ...Object.values(rest),
       slug,
       post_id,
