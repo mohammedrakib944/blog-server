@@ -24,7 +24,7 @@ class PostController {
 
   // search posts
   searchPosts = catchAsync(async (req, res, next) => {
-    const posts = await postServices.searchPosts(req.body.search_text);
+    const posts = await postServices.searchPosts(req.query.keyword);
     res.status(StatusCodes.OK).json(posts);
   });
 

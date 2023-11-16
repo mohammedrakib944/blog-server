@@ -40,7 +40,10 @@ class PostServices {
   async searchPosts(search_text) {
     if (!search_text) throw createError.BadRequest("No search text found!");
     const result = await pool.query(
-      `SELECT * FROM posts WHERE title LIKE '%${search_text}%' OR category LIKE '%${search_text}%' ORDER BY date DESC LIMIT 50`
+      `SELECT posts.*, users.user_id, users.name, users.photo
+      FROM posts INNER JOIN users
+      ON posts.u_id = users.user_id
+      WHERE title LIKE '%${search_text}%' OR tags LIKE '%${search_text}%' ORDER BY date DESC LIMIT 30`
     );
     return result[0];
   }
