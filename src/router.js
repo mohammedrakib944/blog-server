@@ -2,6 +2,7 @@ import express from "express";
 import userRouter from "./features/user/user.route.js";
 import postRouter from "./features/post/post.route.js";
 import categoryRouter from "./features/category/category.route.js";
+import commentRouter from "./features/comment/comment.route.js";
 
 const router = express.Router();
 
@@ -18,6 +19,10 @@ const defaultRoutes = [
   {
     path: "/category",
     route: categoryRouter,
+  },
+  {
+    path: "/comment",
+    route: commentRouter,
   },
 ];
 
