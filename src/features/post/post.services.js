@@ -5,7 +5,7 @@ import slugify from "slugify";
 class PostServices {
   // create post
   async createPost({ user_id, cover_image, title, content, category, tags }) {
-    const slug = slugify(title, { lower: true });
+    const slug = slugify(title, { lower: true }) + "-" + user_id;
     const result = await pool.query(
       `INSERT INTO posts (u_id,cover_image, title, slug, content, category, tags) VALUES (?,?, ?, ?, ?, ?,?)`,
       [user_id, cover_image, title, slug, content, category, tags]
@@ -87,7 +87,7 @@ class PostServices {
   async updatePostById({ title, ...rest }, post_id) {
     if (!title) throw createError.BadRequest("title is required!");
 
-    const slug = slugify(title, { lower: true });
+    const slug = slugify(title, { lower: true }) + "-" + post_id;
 
     const updateFields = Object.keys(rest)
       .map((key) => `${key}=?`)
@@ -135,6 +135,20 @@ class PostServices {
       [post_id]
     );
     return result[0];
+  }
+
+  // dashboard details
+  async dashboardDetails() {
+    const usersSql = `SELECT COUNT(user_id) AS total_users,
+                      SUM(CASE WHEN is_banned = 1 THEN 1 ELSE 0 END) AS banned_users
+                      FROM users;`;
+
+    const postsSql = `SELECT COUNT(post_id) AS total_posts, SUM(views) AS total_views FROM posts`;
+
+    const [result] = await pool.query(usersSql);
+    const [result2] = await pool.query(postsSql);
+
+    return { ...result2[0], ...result[0] };
   }
 
   // delete post by id

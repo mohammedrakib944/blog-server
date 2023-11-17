@@ -70,6 +70,12 @@ class PostController {
     success(res, StatusCodes.OK);
   });
 
+  // dashboard details
+  dashboardDetails = catchAsync(async (req, res, next) => {
+    const dashboard = await postServices.dashboardDetails();
+    res.status(StatusCodes.OK).json(dashboard);
+  });
+
   // delete post by id
   deletePostById = catchAsync(async (req, res, next) => {
     await postServices.deletePostById(req.params.slug);

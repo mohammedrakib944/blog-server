@@ -9,6 +9,7 @@ router.patch("/view/:post_id", postController.incrementView);
 router.get("/views/:user_id", postController.getPostsViewsByUserId);
 router.get("/page/:page_number", postController.getAllPosts);
 router.get("/user/:user_id", postController.getPostsByUserId);
+router.get("/dashboard", postController.dashboardDetails);
 router.get("/search", postController.searchPosts);
 router.get("/featured", postController.getFeaturedPosts);
 router.get("/top_authors", postController.getTopAuthorsByViews);
