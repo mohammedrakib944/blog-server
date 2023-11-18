@@ -153,6 +153,8 @@ class PostServices {
 
   // delete post by id
   async deletePostById(slug) {
+    // delete all comments with this post id
+    await pool.query(`DELETE FROM comments WHERE post_id = ?`, [slug]);
     const result = await pool.query(`DELETE FROM posts WHERE post_id = ?`, [
       slug,
     ]);

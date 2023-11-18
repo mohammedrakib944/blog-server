@@ -57,6 +57,7 @@ class UserServices {
 
   // update user
   async updateUser({ role = "user", ...rest }, user_id) {
+    if (!user_id) throw createError.BadRequest("user_id is required!");
     if (!user_type.includes(role)) {
       throw createError.BadRequest("role must be user or admin");
     }
