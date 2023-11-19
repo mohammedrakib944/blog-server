@@ -1,7 +1,7 @@
 import express from "express";
 import routes from "./router.js";
 import cors from "cors";
-import morgan from "morgan"; // for development
+// import morgan from "morgan"; // for development
 
 const app = express();
 
@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 // user morgran
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // enable cors
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://rakib-blog.vercel.app"],
     credentials: true,
   })
 );
