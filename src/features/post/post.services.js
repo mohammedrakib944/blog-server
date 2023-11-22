@@ -4,11 +4,19 @@ import slugify from "slugify";
 
 class PostServices {
   // create post
-  async createPost({ user_id, cover_image, title, content, category, tags }) {
+  async createPost({
+    user_id,
+    cover_image,
+    title,
+    content,
+    category,
+    tags,
+    is_hide = false,
+  }) {
     const slug = slugify(title, { lower: true }) + "-" + user_id;
     const result = await pool.query(
-      `INSERT INTO posts (u_id,cover_image, title, slug, content, category, tags) VALUES (?,?, ?, ?, ?, ?,?)`,
-      [user_id, cover_image, title, slug, content, category, tags]
+      `INSERT INTO posts (u_id,cover_image, title, slug, content, category, tags, is_hide) VALUES (?,?, ?, ?, ?, ?,?,?)`,
+      [user_id, cover_image, title, slug, content, category, tags, is_hide]
     );
     return result[0];
   }
@@ -18,8 +26,8 @@ class PostServices {
     const result = await pool.query(
       `SELECT posts.*, users.user_id, users.name, users.photo
       FROM posts INNER JOIN users
-      ON posts.u_id = users.user_id ORDER BY date DESC LIMIT 20 OFFSET ?`,
-      [page_number * 20]
+      ON posts.u_id = users.user_id WHERE posts.is_hide=? ORDER BY date DESC LIMIT 20 OFFSET ?`,
+      [false, page_number * 20]
     );
     return result[0];
   }
@@ -43,7 +51,8 @@ class PostServices {
       `SELECT posts.*, users.user_id, users.name, users.photo
       FROM posts INNER JOIN users
       ON posts.u_id = users.user_id
-      WHERE title LIKE '%${search_text}%' OR tags LIKE '%${search_text}%' ORDER BY date DESC LIMIT 30`
+      WHERE posts.is_hide=? AND title LIKE '%${search_text}%' OR tags LIKE '%${search_text}%' ORDER BY date DESC LIMIT 30`,
+      [false]
     );
     return result[0];
   }
@@ -78,7 +87,8 @@ class PostServices {
     const result = await pool.query(
       `SELECT posts.*, users.user_id, users.name, users.photo
       FROM posts INNER JOIN users
-      ON posts.u_id = users.user_id ORDER BY posts.views DESC LIMIT 3`
+      ON posts.u_id = users.user_id WHERE posts.is_hide=? ORDER BY posts.views DESC LIMIT 3`,
+      [false]
     );
     return result[0];
   }
@@ -104,6 +114,15 @@ class PostServices {
     return result[0];
   }
 
+  // Update post is_hide
+  async updatePostIsHide(is_hide, post_id) {
+    const result = await pool.query(
+      `UPDATE posts SET is_hide=? WHERE post_id = ?`,
+      [is_hide, post_id]
+    );
+    return result[0];
+  }
+
   // top 10 author by views
   async getTopAuthors() {
     const result = await pool.query(
@@ -118,13 +137,13 @@ class PostServices {
     return result[0];
   }
 
-  // top 10 posts by views
+  // top 3 posts by views
   async getTopTenPosts() {
-    const result = await pool.query(
-      `SELECT posts.*, users.user_id, users.name, users.photo
-      FROM posts INNER JOIN users
-      ON posts.u_id = users.user_id ORDER BY posts.views DESC LIMIT 3`
-    );
+    // const result = await pool.query(
+    //   `SELECT posts.*, users.user_id, users.name, users.photo
+    //   FROM posts INNER JOIN users
+    //   ON posts.u_id = users.user_id ORDER BY posts.views DESC LIMIT 3`
+    // );
     return result[0];
   }
 

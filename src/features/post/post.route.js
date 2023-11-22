@@ -6,6 +6,7 @@ import postController from "./post.controller.js";
 const router = express.Router();
 
 router.patch("/view/:post_id", postController.incrementView);
+router.patch("/status/:post_id", postController.updatePostIsHide);
 router.get("/views/:user_id", postController.getPostsViewsByUserId);
 router.get("/page/:page_number", postController.getAllPosts);
 router.get("/user/:user_id", postController.getPostsByUserId);

@@ -52,6 +52,12 @@ class PostController {
     success(res, StatusCodes.OK, "Post updated success!");
   });
 
+  // update post is_hide
+  updatePostIsHide = catchAsync(async (req, res, next) => {
+    await postServices.updatePostIsHide(req.body.is_hide, req.params.post_id);
+    success(res, StatusCodes.OK, "Post updated success!");
+  });
+
   // top 5 authors by views
   getTopAuthorsByViews = catchAsync(async (req, res, next) => {
     const authors = await postServices.getTopAuthors();
