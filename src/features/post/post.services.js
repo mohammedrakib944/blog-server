@@ -123,7 +123,7 @@ class PostServices {
     return result[0];
   }
 
-  // top 10 author by views
+  // top 7 author by views
   async getTopAuthors() {
     const result = await pool.query(
       ` SELECT users.*, SUM(posts.views) AS total_view_count
@@ -131,7 +131,7 @@ class PostServices {
         JOIN posts ON users.user_id = posts.u_id
         GROUP BY users.user_id
         ORDER BY total_view_count DESC
-        LIMIT 10;`
+        LIMIT 7;`
     );
 
     return result[0];
